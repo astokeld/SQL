@@ -1,8 +1,0 @@
-let
-    Source = Value.NativeQuery(Snowflake.Databases("southstatebank-enterprise.snowflakecomputing.com","S_PRD_FISERV_PREMIER_WH"){[Name="P_PRD_LTI_ASPIRE"]}[Data], "SELECT#(lf)#(lf)CONTRACT_NUMBER,MATURITY_DATE,(SELECT MAX(DATE_LAST_UPDATED) FROM S_PRD_FISERV_PREMIER.REFINED.CIF_NAME) AS DATE_LAST_UPDATED, OFFICER_NUMBER,START_DATE, CASE WHEN INTERNAL_YIELD IS NULL THEN '0' ELSE INTERNAL_YIELD END AS RATE_OVER_SPLIT,INTERNAL_YIELD AS RATE_TAX_ADJUSTMENT, BOOK_VALUE AS RATE_OUTSTANDING, CUSTOMER_NAME_ID,BOOK_VALUE AS NET_CURR_BOOK_BALANCE,CONTRACT_STATUS,BOOK_VALUE AS EXPOSURE, '0' AS CLOSED_ACCOUNT_FLAG, 'Y' AS ACTIVE_NOTE, '0' AS EMPLOYEE_OFFICER_DIRECTOR, '0' AS PERCENT_PARTICIPATED, 'Include' AS TODAY_FILTER#(lf)#(lf)FROM P_PRD_LTI_ASPIRE.CONSUMPTION.CON_LTI_LEASE_LOAN_TRIAL#(lf)#(lf)WHERE CONTRACT_STATUS = 'Booked'", null, [EnableFolding=true]),
-    #"Renamed Columns" = Table.RenameColumns(Source,{{"CONTRACT_NUMBER", "NOTE_NUMBER"}, {"START_DATE", "ORIG_NOTE_DATE"}, {"CUSTOMER_NAME_ID", "PRIMARY_NAME_ID"}, {"OFFICER_NUMBER", "RESP_CODE"}, {"RATE_OUTSTANDING", "Rate * Outstanding"}, {"RATE_TAX_ADJUSTMENT", "Rate * Balance Tax Adj"}}),
-    #"Renamed Columns1" = Table.RenameColumns(#"Renamed Columns",{{"TODAY_FILTER", "Today Filter"}}),
-    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns1",{{"ORIG_NOTE_DATE", type date}}),
-    #"Changed Type" = Table.TransformColumnTypes(#"Changed Type1",{{"MATURITY_DATE", type date}})
-in
-    #"Changed Type"
